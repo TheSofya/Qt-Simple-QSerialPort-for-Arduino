@@ -1,32 +1,30 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QSerialPort>
-#include <QSerialPortInfo>
-#include <QDebug>
-#include <QObject>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , arduino(new QSerialPort(this)) {
-     ui->setupUi(this);
+    , ui(new Ui::MainWindow) {
+
+    ui->setupUi(this);
+
+    arduino = std::make_unique<QSerialPort>(this);
 
     connect(ui->comboBox, &QComboBox::currentTextChanged, this, &MainWindow::on_comboBox_currentIndexChanged);
-
-    fillPorts();
+    fillComboBoxWithAvaliablePorts();
 };
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::fillPorts() {
+void MainWindow::fillComboBoxWithAvaliablePorts() {
     ui->comboBox->clear();
-    const auto information = QSerialPortInfo::availablePorts();
-    for (const QSerialPortInfo &info : information) {
-        QStringList list;
-        list << info.portName();
-        ui->comboBox->addItem(list.first(), list);
+    const auto ports_information = QSerialPortInfo::availablePorts();
+    for (const QSerialPortInfo &info : ports_information) {
+        QStringList list_of_avaliable_ports;
+        list_of_avaliable_ports << info.portName();
+        ui->comboBox->addItem(list_of_avaliable_ports.first(), list_of_avaliable_ports);
     }
 }
 
@@ -38,10 +36,10 @@ void MainWindow::on_pushButtonTrue_clicked() {
     }
 }
 
-//QByteArray b("a0 01 01 a2");
-//QByteArray t = b.replace(" ", "");
-//QByteArray bytes = QByteArray::fromHex(t);
-//arduino->write(bytes);
+/*QByteArray b("a0 01 01 a2");
+QByteArray t = b.replace(" ", "");
+QByteArray bytes = QByteArray::fromHex(t);
+arduino->write(bytes);*/
 
 void MainWindow::on_pushButtonFalse_clicked() {
     if (arduino->isWritable()) {
@@ -51,10 +49,10 @@ void MainWindow::on_pushButtonFalse_clicked() {
     }
 }
 
-//QByteArray b("a0 01 00 a1");
-//QByteArray t = b.replace(" ", "");
-//QByteArray bytes = QByteArray::fromHex(t);
-//arduino->write(bytes);
+/*QByteArray b("a0 01 00 a1");
+QByteArray t = b.replace(" ", "");
+QByteArray bytes = QByteArray::fromHex(t);
+arduino->write(bytes);*/
 
 void MainWindow::on_comboBox_currentIndexChanged(const QString &port) {
     qDebug() << "Try to connect" << port;

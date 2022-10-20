@@ -3,16 +3,20 @@
 
 #include <QMainWindow>
 #include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QDebug>
+#include <QObject>
+
+#include <memory>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class SerialPort;
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
@@ -26,9 +30,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QSerialPort *arduino = nullptr;
+    std::unique_ptr<QSerialPort> arduino;
     static const quint16 arduino_uno_vendor_id = 9025;
     static const quint16 arduino_uno_product_id = 67;
-    void fillPorts();
+    void fillComboBoxWithAvaliablePorts();
 };
 #endif // MAINWINDOW_H

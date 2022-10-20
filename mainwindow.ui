@@ -60,7 +60,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Select a port</string>
+     <string>Select a port:</string>
     </property>
    </widget>
   </widget>
